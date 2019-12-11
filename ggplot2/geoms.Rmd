@@ -1,0 +1,261 @@
+---
+title: "geoms i ggplot2"
+author: "Martin M. S. Pedersen"
+date: "February 7, 2019"
+output:
+  pdf_document: default
+  html_document: default
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r libraries, include=FALSE}
+library(ggplot2)
+library(tidyverse)
+```
+
+```{r geom_abline}
+p <- ggplot()
+p <- p + geom_abline(data = data.frame(s=c(1,2,3), ic=c(0,2,5)),
+                     mapping = aes(slope = s, intercept = ic, linetype = factor(s)))
+p <- p + scale_linetype(name="s") 
+p <- p + scale_x_continuous(name="x", limits=c(0,10)) 
+p <- p + scale_y_continuous(name="y", limits=c(0,30)) 
+p
+```
+
+\newpage
+```{r geom_area stack, warning=FALSE}
+df <- 
+  txhousing %>%
+    filter(city %in% c("Austin","Houston","Dallas","San Antonio","Fort Worth")) %>%
+    group_by(city, year) %>%
+    summarize(sales = sum(sales))
+p <- ggplot(df)
+p <- p + aes(x = year, y = sales, fill = city)
+p <- p + geom_area(position = "stack")
+p <- p + scale_y_continuous(expand = c(0, 0), 
+                             labels = function(num) scales::comma(num,big.mark = "."))
+p <- p + labs(title = "Huse solgt i Texas",
+              caption = "Stacked area version", x = "Year", y = "Home Sales")
+p
+```
+
+\newpage
+```{r geom_area filled}
+df <- 
+  txhousing %>%
+    filter(city %in% c("Austin","Houston","Dallas","San Antonio","Fort Worth")) %>%
+    group_by(city, year) %>%
+    summarize(listings = sum(listings)) %>%
+    mutate(listings = ifelse(is.na(listings), lag(listings), listings))
+p <- ggplot(df)
+p <- p + aes(x = year, y = listings, fill = city)
+p <- p + geom_area(position = "fill")
+p <- p + scale_y_continuous(expand = c(0, 0), labels = scales::percent)
+p <- p + labs(title = "Huse til salg i Texas",
+              caption = "Filled area version", x = "Year", y = "Pct.")
+p
+```
+
+\newpage
+```{r geom_bar}
+p <- ggplot(mpg, aes(class))
+p <- p + geom_bar()
+p <- p + geom_bar(aes(fill = drv))
+p
+```
+
+
+\newpage
+```{r geom_bar flipped}
+p <- ggplot(mpg, aes(class))
+p <- p + geom_bar(aes(fill = drv), position = position_stack(reverse = TRUE)) 
+p <- p + coord_flip()
+p
+```
+
+\newpage
+```{r geom_boxplot}
+p <- ggplot(mpg, aes(class, hwy))
+p <- p + geom_boxplot()
+p <- p + coord_flip()
+p
+```
+
+\newpage
+```{r geom_boxplot continuous x}
+p <- ggplot(diamonds, aes(carat, price)) 
+p <- p + geom_boxplot(aes(group = cut_width(carat, 0.25)), outlier.alpha = 0.1)
+p
+```
+
+\newpage
+```{r geom_boxplot own computation}
+set.seed(1)
+y <- rnorm(10)
+df <- data.frame(
+  x = 1,
+  y0 = min(y),
+  y25 = quantile(y, 0.25),
+  y50 = median(y),
+  y75 = quantile(y, 0.75),
+  y100 = max(y)
+)
+p <- ggplot(df, aes(x))
+p <- p + geom_boxplot(
+                      aes(ymin = y0, lower = y25, middle = y50, upper = y75, ymax = y100),
+                      stat = "identity")
+p
+```
+
+\newpage
+```{r geom_contour}
+p <- ggplot(faithfuld)
+p <- p + aes(waiting, eruptions, z = density)
+p <- p + geom_contour()
+p
+```
+
+
+\newpage
+```{r geom_count}
+p <- ggplot(mpg, aes(cty, hwy))
+p <- p + geom_count() 
+p <- p + scale_size_area()
+p
+```
+
+\newpage
+```{r geom_curve}
+df <- data.frame(x1 = mtcars[1,"wt"], x2 = mtcars[6,"wt"], y1 = mtcars[1,"mpg"], y2 = mtcars[6,"mpg"])
+
+p1 <- ggplot(mtcars, aes(wt, mpg))
+p1 <- p1 + geom_point()
+p1 <- p1 + geom_curve(aes(x = x1, y = y1, xend = x2, yend = y2, colour = "curve"), data = df)
+p1 <- p1 + geom_segment(aes(x = x1, y = y1, xend = x2, yend = y2, colour = "segment"), data = df)
+p1
+```
+
+
+\newpage
+```{r geom_density_2}
+p <- ggplot(diamonds, aes(depth, colour = cut, fill = cut))
+p <- p + geom_density(alpha = 0.1)
+p <- p + xlim(55,70)
+p
+```
+
+
+\newpage
+```{r geom_density stacked density plots ; loses marginal densities}
+p <- ggplot(diamonds, aes(carat, fill = cut))
+p <- p + geom_density(position = "stack")
+p
+```
+
+\newpage
+```{r geom_density stacked density plots ; Preserves marginal densities}
+p <- ggplot(diamonds, aes(carat, stat(count), fill = cut))
+p <- p + geom_density(position = "stack")
+p
+```
+
+\newpage
+```{r geom_errorbar}
+df <- data.frame(
+  trt = factor(c(1, 1, 2, 2)),
+  resp = c(1, 5, 3, 4),
+  group = factor(c(1, 2, 1, 2)),
+  upper = c(1.1, 5.3, 3.3, 4.2),
+  lower = c(0.8, 4.6, 2.4, 3.6)
+)
+p <- ggplot(df, aes(trt, resp, colour = group))
+p <- p + geom_errorbar(aes(ymin = lower, ymax = upper), width = 0.2)
+p <- p + geom_line(aes(group = group))
+p
+```
+
+\newpage
+```{r geom_dotplot_1}
+p <- ggplot(mtcars, aes(x = mpg))
+p <- p + geom_dotplot()
+p
+```
+
+\newpage
+```{r geom_dotplot_2}
+p <- ggplot(mtcars, aes(x = mpg))
+p <- p + geom_dotplot(binwidth = 2)
+p
+```
+
+
+\newpage
+y axis isn't really meaningful, so hide it
+```{r geom_dotplot_3}
+p <- ggplot(mtcars, aes(x = mpg))
+p <- p + geom_dotplot(binwidth = 2)
+p <- p + scale_y_continuous(name = NULL, breaks = NULL)
+p
+```
+
+\newpage
+```{r geom_qq}
+set.seed(1)
+p <- ggplot(mtcars, aes(sample = mpg))
+p <- p + stat_qq()
+p <- p + stat_qq_line()
+p
+```
+
+\newpage
+```{r geom_rug}
+p <- ggplot(mtcars, aes(wt, mpg))
+p <- p + geom_point()
+p <- p + geom_rug()
+p
+```
+
+\newpage
+**Reference lines: horizontal, vertical, and diagonal**
+
+These geoms add reference lines (sometimes called rules) to a plot, either horizontal, vertical, or diagonal (specified by slope and intercept). These are useful for annotating plots.
+```{r geom_vline, geom_hline}
+p <- ggplot(mtcars, aes(wt, mpg))
+p <- p + geom_point()
+p <- p + geom_hline(yintercept = 20)
+p <- p + geom_vline(xintercept = 1:5)
+p
+
+```
+
+\newpage
+*geom_step()* is useful when you want to highlight exactly when the y value changes
+```{r geom_step}
+recent <- economics[economics$date > as.Date("2013-01-01"),]
+p <- ggplot(recent, aes(date, unemploy))
+p <- p + geom_step()
+p
+
+```
+
+
+\newpage
+```{r geom_line}
+p <- ggplot(data = economics)
+p <- p + aes(x = date, y = unemploy) 
+p <- p + geom_line()
+p
+```
+
+\newpage
+```{r geom_point}
+p <- ggplot(data = mtcars)
+p <- p + aes(x = mpg, y = hp) 
+p <- p + geom_point()
+p
+```
+
