@@ -1,2 +1,2 @@
-# SU0236
-Support filer til kurset [SU0236 R Grundlæggende](https://github.com/SuperUsersDK/SU0236)
+# SU0237
+Support filer til kurset [SU0237 R Programmering Videregående](https://github.com/SuperUsersDK/SU0237)
