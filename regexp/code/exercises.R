@@ -1,4 +1,4 @@
-lines <- readLines("../datafiles/starfile") 
+lines <- readLines("/home/bruger/su0237/datafiles/starfile") 
 
 # linjer, der indeholder tal
 # Outputtet skulle gerne være:
