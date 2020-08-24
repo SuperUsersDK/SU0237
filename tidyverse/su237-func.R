@@ -1,4 +1,5 @@
 library(magrittr)
+library(tidyverse)
 
 set.seed(1)
 
@@ -45,4 +46,6 @@ paste_talk <- function(x, y) {
 
 set.seed(42)
 random_ints <- sample(c(seq(21, 101, 2), c(6, 8, 10)))
+
+
 
