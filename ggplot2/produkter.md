@@ -11,8 +11,12 @@
 ## Opgaver
 
 1. Indlæs salg.xlsx i en data-frame vha. "Import Dataset" menuen i R-Studio eller brug funktionen readxl::read_excel()
-3. Afbild de tre versioner i en graf med forskellige farver, så du får noget der ligner dette:
-
+2. Konverterer det indlæste fra wide til long-format.
+3. Fjern evt. na'er
+4. Afbild de tre versioner i en graf med forskellige farver, så du får noget der ligner dette:
+5. For at få datoer på X-aksen kan du bruge scale_x_date(breaks = seq(as.Date("2008-01-01"), as.Date("2020-01-01"), "2 quarter"))
+6. For at dreje teksten på X-aksen kan du bruge: theme(axis.text.x = element_text(angle = -90, vjust = 0.5)
+ 
 ![1.png][produkter1]
 
 
