@@ -15,7 +15,11 @@
 3. Fjern evt. na'er
 4. Afbild de tre versioner i en graf med forskellige farver, så du får noget der ligner dette:
 5. For at få datoer på X-aksen kan du bruge scale_x_date(breaks = seq(as.Date("2008-01-01"), as.Date("2020-01-01"), "2 quarter"))
-6. For at dreje teksten på X-aksen kan du bruge: theme(axis.text.x = element_text(angle = -90, vjust = 0.5)
+6. Afprøv forskellige temaer fra ggthemes-pakken.
+7. For at dreje teksten på X-aksen kan du bruge: theme(axis.text.x = element_text(angle = -90, vjust = 0.5)
+8. For at fjerne titlen på X-aksen og på legend kan du tilføje: axis.title.x = element_blank(), legend.title = element_blank() 
+9. Afprøv forskellige temaer fra ggthemes-pakken.
+
  
 ![1.png][produkter1]
 
