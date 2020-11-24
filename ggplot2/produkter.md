@@ -10,6 +10,10 @@
 
 ## Opgaver
 
-1. Åben salg.csv med en tekst-editor. Læs og forstå fil-formattet
-2. Indlæs salg.csv i en data-frame
+1. Indlæs salg.xlsx i en data-frame vha. "Import Dataset" menuen i R-Studio eller brug funktionen readxl::read_excel()
 3. Afbild de tre versioner i en graf med forskellige farver, så du får noget der ligner dette:
+
+![1.png][produkter1]
+
+
+[produkter1]: https://raw.githubusercontent.com/SuperUsersDK/SU0237/master/ggplot2/produkter.png
