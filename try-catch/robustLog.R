@@ -16,5 +16,3 @@ robustLog <- function(num) {
 for (input in inputs) {
     print(paste("log of", input, "=", robustLog(input)))
 }
-
-
